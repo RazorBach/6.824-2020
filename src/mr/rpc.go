@@ -14,16 +14,50 @@ import "strconv"
 // and reply for an RPC.
 //
 
-type ExampleArgs struct {
-	X int
-}
-
-type ExampleReply struct {
-	Y int
-}
-
 // Add your RPC definitions here.
+type MapTask struct {
+	Id        int
+	File_name string
+}
 
+type ReduceTask struct {
+	Id            int
+	Idx           int
+	Im_file_names []string
+}
+
+type ReqNReduceArgs struct {
+}
+
+type ReqNReduceReply struct {
+	NReduce int
+}
+
+type ReqTaskArgs struct {
+}
+
+type ReqTaskReply struct {
+	Task_type   int // 0 - map; 1 - reduce; 2 - done
+	Map_task    MapTask
+	Reduce_task ReduceTask
+}
+
+type FinishMapTaskArgs struct {
+	Task_id  int
+	Im_files []string // Should be same len as nReduce
+}
+
+type FinishMapTaskReply struct {
+}
+
+type FinishReduceTaskArgs struct {
+	Task_id          int
+	Idx              int
+	Output_file_name string // Should be same len as nReduce
+}
+
+type FinishReduceTaskReply struct {
+}
 
 // Cook up a unique-ish UNIX-domain socket name
 // in /var/tmp, for the master.
