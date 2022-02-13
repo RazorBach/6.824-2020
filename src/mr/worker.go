@@ -20,7 +20,7 @@ func (a ByKey) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a ByKey) Less(i, j int) bool { return a[i].Key < a[j].Key }
 
 // Worker side:
-// Spawn R threads, each thread starts ReqTaskRequest in an infinite loop
+// Spawn threads, each thread starts ReqTaskRequest in an infinite loop
 // ReqTaskResponse would tell worker if started a new Mapper/Reducer
 // 1. for mapper, read certain file(assigned by ReqTaskResponse) and write to out put file(using key to locate the file)
 // 2. for reducer, read certain intermediate file(according to task id) write to single output file mr-out-X.
@@ -172,15 +172,16 @@ func Worker(mapf func(string, string) []KeyValue,
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
 	// os.Remove("worker-log.txt")
-	f, err := os.OpenFile("worker-log.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-	if err != nil {
-		log.Fatalf("error opening file: %v", err)
-	}
-	defer f.Close()
+	// f, err := os.OpenFile("worker-log.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	// if err != nil {
+	// 	log.Fatalf("error opening file: %v", err)
+	// }
+	// defer f.Close()
 
-	log.SetOutput(f)
+	// log.SetOutput(f)
+	log.SetOutput(ioutil.Discard)
 
-	// Spawn nReduce threads to act as workers.
+	// Spawn threads to act as workers.
 	for {
 		reply := ReqTaskReply{}
 		if !ReqTask(&reply) {

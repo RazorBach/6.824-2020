@@ -8,7 +8,7 @@ import "net/http"
 import "sync"
 import "fmt"
 
-// import "io/ioutil"
+import "io/ioutil"
 import "time"
 
 type Master struct {
@@ -32,7 +32,7 @@ type Master struct {
 
 // Master side:
 // Assign task when receiving ReqTaskRequest
-// DOne->check R reducers are all done
+// DOne->check reducers are all done
 // Read all files.
 // Assign each incoming task with next unfinished file (mapper++)
 // When no file - block until all mappers finished
@@ -267,15 +267,15 @@ func MakeMaster(files []string, nReduce int) *Master {
 	}
 
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	os.Remove("master-log.txt")
-	f, err := os.OpenFile("master-log.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-	if err != nil {
-		log.Fatalf("error opening file: %v", err)
-	}
+	// os.Remove("master-log.txt")
+	// f, err := os.OpenFile("master-log.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	// if err != nil {
+	// 	log.Fatalf("error opening file: %v", err)
+	// }
 	// defer f.Close()
-	log.SetOutput(f)
+	// log.SetOutput(f)
 
-	// log.SetOutput(ioutil.Discard)
+	log.SetOutput(ioutil.Discard)
 	m.server()
 	go m.CheckMapperTaskStatus()
 	go m.CheckReducerTaskStatus()
